@@ -1,110 +1,55 @@
-import General from './general';
+import Light from './basicSettings';
+import { WifiController } from './WifiConfig';
 
-interface ComponentData {
-  name: string;
-  lightIntensity: number;
-  numOfLights: number;
-  isLightOn: boolean;
-  autoOn: string;
-  autoOff: string;
-  usage: number[];
-  element?: HTMLElement | null;
-}
+describe('Light', () => {
+  let light: Light;
+  let wifiController: WifiController;
 
-class Light extends General {
-  wifiController: any; // Temporary type; should be WifiController interface
+  beforeEach(() => {
+    wifiController = {
+      isWifiActive: true,
+      currentConnection: { name: 'Home-WiFi', signalStrength: 'Excellent', isSecured: true },
+      init: jest.fn(),
+      connectToNetwork: jest.fn(),
+      renderConnections: jest.fn(),
+    };
+    light = new Light(wifiController);
+    document.body.innerHTML = `
+      <div class="rooms">
+        <p>hall</p>
+        <button class="light-switch"></button>
+        <img src="light_bulb.svg" />
+        <input type="range" class="intensity-slider" />
+      </div>
+    `;
+  });
 
-  constructor(wifiController: any) {
-    super();
-    this.wifiController = wifiController;
-    console.log('Light constructor - wifiController:', this.wifiController);
-    this.componentsData = Object.fromEntries(
-      Object.entries(this.componentsData).map(([key, comp]) => [
-        key,
-        { ...comp, element: null }
-      ])
-    );
-  }
+  test('toggleLightSwitch toggles light state', () => {
+    const button = document.querySelector('.light-switch') as HTMLButtonElement;
+    const img = document.querySelector('img') as HTMLImageElement;
+    light.toggleLightSwitch(button);
+    const component = light.getComponent('hall')!;
+    expect(component.isLightOn).toBe(true);
+    expect(img.src).toContain('light_bulb.svg');
+    const roomImage = document.querySelector('.rooms img') as HTMLImageElement;
+    expect(parseFloat(roomImage.style.filter.replace('brightness(', '').replace(')', ''))).toBeCloseTo(0.8, 1);
+  });
 
-  toggleLightSwitch(lightSwitch: HTMLElement): void {
-    console.log('Toggling light switch:', lightSwitch);
-    console.log('wifiController in toggleLightSwitch:', this.wifiController);
-    
-    if (!this.wifiController?.isWifiActive || !this.wifiController?.currentConnection) {
-      this.displayNotification('Cannot toggle light - no Wi-Fi connection', 'beforeend', document.body);
-      return;
-    }
+  test('toggleLightSwitch fails without Wi-Fi', () => {
+    wifiController.isWifiActive = false;
+    const button = document.querySelector('.light-switch') as HTMLButtonElement;
+    light.toggleLightSwitch(button);
+    const component = light.getComponent('hall')!;
+    expect(component.isLightOn).toBe(false);
+  });
 
-    const componentData = this.getComponentData(lightSwitch, '.rooms', 'p');
-    if (!componentData) {
-      console.warn('Component data not found for light switch');
-      return;
-    }
-
-    componentData.isLightOn = !componentData.isLightOn;
-    const img = lightSwitch.querySelector('img') as HTMLImageElement;
-    if (!img) {
-      console.warn('Image not found in light switch');
-      return;
-    }
-
-    const src = componentData.isLightOn ? img.dataset.lighton : './assets/svgs/light_bulb_off.svg';
-    img.src = src || './assets/svgs/light_bulb_off.svg';
-
-    const roomContainer = lightSwitch.closest('.rooms') as HTMLElement;
-    const roomImage = roomContainer ? roomContainer.querySelector('img') as HTMLImageElement : null;
-    if (roomImage) {
-      if (componentData.isLightOn && componentData.lightIntensity === 0) {
-        componentData.lightIntensity = 5;
-      } else if (!componentData.isLightOn) {
-        componentData.lightIntensity = 0;
-      }
-      this.handleLightIntensity(roomImage, componentData.lightIntensity);
-    } else {
-      console.warn('Room image not found for brightness adjustment');
-    }
-
-    this.displayNotification(
-      `${componentData.name} light turned ${componentData.isLightOn ? 'on' : 'off'}`,
-      'beforeend',
-      document.body
-    );
-  }
-
-  handleLightIntensitySlider(slider: HTMLInputElement, value: string): void {
-    const componentData = this.getComponentData(slider, '.rooms', 'p');
-    if (!componentData) {
-      console.warn('Component data not found for slider');
-      return;
-    }
-
-    componentData.lightIntensity = Number(value);
-    const roomContainer = slider.closest('.rooms') as HTMLElement;
-    const roomImage = roomContainer ? roomContainer.querySelector('img') as HTMLImageElement : null;
-    if (!roomImage) {
-      console.warn('Room image not found for brightness adjustment');
-      return;
-    }
-
-    this.handleLightIntensity(roomImage, componentData.lightIntensity);
-    this.displayNotification(
-      `${componentData.name} light intensity set to ${value}`,
-      'beforeend',
-      document.body
-    );
-  }
-
-  setupNotificationClose(): void {
-    document.addEventListener('click', (e: Event) => {
-      if ((e.target as HTMLElement).closest('.close-notification')) {
-        const notification = (e.target as HTMLElement).closest('.notification') as HTMLElement;
-        if (notification) {
-          notification.style.animation = 'fadeOut 0.3s ease-out';
-          setTimeout(() => notification.remove(), 300);
-        }
-      }
-    });
-  }
-}
-
-export default Light;
+  test('handleLightIntensitySlider updates intensity', () => {
+    const slider = document.querySelector('.intensity-slider') as HTMLInputElement;
+    slider.value = '7';
+    light.handleLightIntensitySlider(slider, '7');
+    const component = light.getComponent('hall')!;
+    expect(component.lightIntensity).toBe(7);
+    const roomImage = document.querySelector('.rooms img') as HTMLImageElement;
+    expect(roomImage.style.filter).toBe('brightness(1.08)');
+  });
+});
