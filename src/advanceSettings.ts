@@ -215,5 +215,119 @@ class AdvanceSettings extends Light {
     this.setComponentElement(component);
     this.displayNotification(`Automatic turn on set to ${value} for ${component.name}.`, 'beforeend', document.body);
   }
+
+  customizeAutomaticOffPreset(selectedElement: HTMLElement): void {
+    const element = this.closestSelector(selectedElement, '.defaultOff', 'input') as HTMLInputElement;
+    const { value } = element;
+
+    if (!this.#isValidTime(value)) {
+      this.displayNotification('Please select a valid time.', 'beforeend', document.body);
+      return;
+    }
+
+    const component = this.getComponentData(element, '.advanced_features', '.component_name');
+    if (!component) return;
+    component.autoOff = value;
+    element.value = '';
+
+    const parentElement = this.selector('.advanced_features_container');
+    const childElement = this.selector('.advanced_features');
+    if (childElement) {
+      childElement.remove();
+    }
+    if (parentElement) {
+      this.renderHTML(this.#markup(component), 'afterbegin', parentElement);
+      this.#updateUsageData(component);
+      this.#analyticsUsage(component.usage);
+    }
+
+    this.setComponentElement(component);
+    this.displayNotification(`Automatic turn off set to ${value} for ${component.name}.`, 'beforeend', document.body);
+  }
+
+  getSelectedComponent(componentName?: string): ComponentData | { [key: string]: ComponentData } {
+    if (!componentName) return this.componentsData;
+    return this.componentsData[componentName.toLowerCase()];
+  }
+
+  setNewData(component: string, key: string, data: any): void {
+    const selectedComponent = this.componentsData[component.toLowerCase()];
+    if (selectedComponent as { [key: string]: any })[key] = data;
+  }
+
+  capFirstLetter(word: string): string {
+    return word.replace(word[0], word[0].toUpperCase());
+  }
+
+  #isValidTime(time: string): boolean {
+    return typeof time === 'string' && /^[0-2][0-9]:[0-5][0-9]$/.test(time);
+  }
+
+  initAutoLightControl(): void {
+    setInterval(() => {
+      const now = new Date();
+      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      console.log('Checking auto times:', currentTime);
+
+      Object.values(this.componentsData).forEach(comp => {
+        if (comp.autoOn === currentTime && !comp.isLightOn) {
+          this.#toggleLightAutomatically(comp, true);
+        } else if (comp.autoOff === currentTime && comp.isLightOn) {
+          this.#toggleLightAutomatically(comp, false);
+        }
+      });
+    }, 60000);
+  }
+
+  #toggleLightAutomatically(component: ComponentData, isOn: boolean): void {
+    if (!this.wifiController?.isWifiActive || !this.wifiController?.currentConnection) {
+      this.displayNotification(`Cannot toggle ${component.name} light automatically - no Wi-Fi connection`, 'beforeend', document.body);
+      return;
+    }
+
+    component.isLightOn = isOn;
+    component.lightIntensity = isOn ? 5 : 0;
+
+    const lightSwitch = component.element;
+    if (lightSwitch) {
+      const lightImg = lightSwitch.querySelector('img') as HTMLImageElement;
+      if (lightImg) {
+        lightImg.src = isOn ? lightImg.dataset.lighton || './assets/svgs/light_bulb.svg' : './assets/svgs/light_bulb_off.svg';
+      } else {
+        console.warn(`No image found in light switch for ${component.name}`);
+      }
+    } else {
+      console.warn(`No light switch element for ${component.name}`);
+    }
+
+    const roomContainer = lightSwitch?.closest('.rooms') as HTMLElement;
+    const roomImage = roomContainer?.querySelector('img') as HTMLImageElement;
+    if (roomImage) {
+      this.handleLightIntensity(roomImage, component.lightIntensity);
+    } else {
+      console.warn(`No room image found for ${component.name}`);
+    }
+
+    this.displayNotification(
+      `${component.name} light turned ${isOn ? 'on' : 'off'} automatically`,
+      'beforeend',
+      document.body
+    );
+  }
+
+  #updateUsageData(component: ComponentData): void {
+    const autoOn = component.autoOn.split(':').map(Number);
+    const autoOff = component.autoOff.split(':').map(Number);
+
+    let hoursOn: number;
+    if (autoOff[0] < autoOn[0] || (autoOff[0] === autoOn[0] && autoOff[1] < autoOn[1])) {
+      hoursOn = (24 - autoOn[0] + autoOff[0]) + (autoOff[1] - autoOn[1]) / 60;
+    } else {
+      hoursOn = (autoOff[0] - autoOn[0]) + (autoOff[1] - autoOn[1]) / 60;
+    }
+
+    component.usage = Array(7).fill(Math.round(hoursOn));
+  }
 }
+
 export default AdvanceSettings;
