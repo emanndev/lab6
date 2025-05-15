@@ -11,7 +11,6 @@ interface ComponentData {
   element?: HTMLElement | null;
 }
 
-
 class Light extends General {
   wifiController: any; // Temporary type; should be WifiController interface
 
