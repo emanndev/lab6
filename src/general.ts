@@ -100,6 +100,107 @@ class General {
     }
   }
 
+  notification(message: string): string {
+    const iconSrc = this.getNotificationIcon(message);
+    return `
+      <div class="notification">
+        <div class="notification-content">
+          <div class="notification-icon">
+            <img src="${iconSrc}" alt="Notification icon">
+          </div>
+          <p>${message}</p>
+        </div>
+        <button class="close-notification">
+          <img src="./assets/svgs/close.svg" alt="Close notification">
+        </button>
+      </div>
+    `;
+  }
+
+  displayNotification(message: string, position: InsertPosition, container: HTMLElement): void {
+    const html = this.notification(message);
+    this.renderHTML(html, position, container);
+    const notification = container.querySelector('.notification:last-child') as HTMLElement;
+    if (notification) {
+      setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+      }, 5000);
+    }
+  }
+
+  selector(identifier: string): HTMLElement | null {
+    return document.querySelector(identifier);
+  }
+
+  closestSelector(selectedElement: HTMLElement, ancestorIdentifier: string, childSelector: string): HTMLElement | null {
+    const closestAncestor = selectedElement.closest(ancestorIdentifier);
+    return closestAncestor ? (closestAncestor.querySelector(childSelector) as HTMLElement) : null;
+  }
+
+  handleLightIntensity(element: HTMLElement, lightIntensity: number): void {
+    const brightness = 0.1 + (lightIntensity / 10) * 1.4;
+    element.style.filter = `brightness(${brightness})`;
+  }
+
+  updateComponentData(data: ComponentData): void {
+    this.componentsData[data.name] = data;
+  }
+
+  updateMarkupValue(element: HTMLElement, value: string): void {
+    element.textContent = value;
+  }
+
+  toggleHidden(element: HTMLElement): void {
+    element.classList.toggle('hidden');
+  }
+
+  removeHidden(element: HTMLElement): void {
+    element.classList.remove('hidden');
+  }
+
+  addHidden(element: HTMLElement): void {
+    element.classList.add('hidden');
+  }
+
+  setComponentElement(roomData: ComponentData): void {
+    let parent: HTMLElement | null;
+    if (roomData.name === 'walkway & corridor') {
+      parent = this.selector('.corridor');
+    } else if (roomData.name === 'guest room') {
+      const elementClassName = this.formatTextToClassName(roomData.name);
+      parent = this.selector(`.${elementClassName}`);
+    } else if (roomData.name === 'outdoor lights') {
+      parent = this.selector('.outside_lights');
+    } else {
+      parent = this.selector(`.${roomData.name}`);
+    }
+    
+    if (!parent) {
+      console.warn(`Parent element not found for ${roomData.name}`);
+      return;
+    }
+
+    const buttonElement = parent.querySelector('.light-switch') as HTMLElement;
+    if (!buttonElement) {
+      console.warn(`Light switch not found for ${roomData.name}`);
+      return;
+    }
+
+    if (roomData.element) {
+      console.log(`Element already set for ${roomData.name}`);
+      return;
+    }
+    
+    roomData.element = buttonElement;
+    console.log(`Set element for ${roomData.name}:`, buttonElement);
+  }
+
+  formatTextToClassName(name: string): string {
+    const words = name.split(' ');
+    const newWord = words.join('_');
+    return newWord;
+  }
 }
 
 export default General;
