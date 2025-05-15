@@ -49,5 +49,63 @@ class Light extends General {
       return;
     }
 
+    const src = componentData.isLightOn ? img.dataset.lighton : './assets/svgs/light_bulb_off.svg';
+    img.src = src || './assets/svgs/light_bulb_off.svg';
+
+    const roomContainer = lightSwitch.closest('.rooms') as HTMLElement;
+    const roomImage = roomContainer ? roomContainer.querySelector('img') as HTMLImageElement : null;
+    if (roomImage) {
+      if (componentData.isLightOn && componentData.lightIntensity === 0) {
+        componentData.lightIntensity = 5;
+      } else if (!componentData.isLightOn) {
+        componentData.lightIntensity = 0;
+      }
+      this.handleLightIntensity(roomImage, componentData.lightIntensity);
+    } else {
+      console.warn('Room image not found for brightness adjustment');
+    }
+
+    this.displayNotification(
+      `${componentData.name} light turned ${componentData.isLightOn ? 'on' : 'off'}`,
+      'beforeend',
+      document.body
+    );
+  }
+
+  handleLightIntensitySlider(slider: HTMLInputElement, value: string): void {
+    const componentData = this.getComponentData(slider, '.rooms', 'p');
+    if (!componentData) {
+      console.warn('Component data not found for slider');
+      return;
+    }
+
+    componentData.lightIntensity = Number(value);
+    const roomContainer = slider.closest('.rooms') as HTMLElement;
+    const roomImage = roomContainer ? roomContainer.querySelector('img') as HTMLImageElement : null;
+    if (!roomImage) {
+      console.warn('Room image not found for brightness adjustment');
+      return;
+    }
+
+    this.handleLightIntensity(roomImage, componentData.lightIntensity);
+    this.displayNotification(
+      `${componentData.name} light intensity set to ${value}`,
+      'beforeend',
+      document.body
+    );
+  }
+
+  setupNotificationClose(): void {
+    document.addEventListener('click', (e: Event) => {
+      if ((e.target as HTMLElement).closest('.close-notification')) {
+        const notification = (e.target as HTMLElement).closest('.notification') as HTMLElement;
+        if (notification) {
+          notification.style.animation = 'fadeOut 0.3s ease-out';
+          setTimeout(() => notification.remove(), 300);
+        }
+      }
+    });
+  }
+}
 
 export default Light;
