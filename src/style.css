@@ -7,18 +7,20 @@
     /* colors */
     --white-color: #fff;
     --light-on: #ffd600;
+    --notification-bg: #ffffff;
+    --notification-border: #e0e0e0;
+    --notification-text: #333333;
 }
 
 body {
     width: 100%;
     height: 100dvh;
-
     color: var(--white-color);
     font-size: 16px;
     font-family: "Noto Sans", sans-serif;
     font-optical-sizing: auto;
     background: #ccc;
-    overflow: hidden; /* remove if it's causing issues*/
+    overflow: hidden;
 }
 
 nav {
@@ -29,8 +31,7 @@ nav {
     align-items: center;
     gap: 20px;
     padding: 0 2rem;
-
-    background: #004
+    background: #004;
 }
 nav > *:not(nav > section:last-child) {
     width: 30px;
@@ -38,27 +39,24 @@ nav > *:not(nav > section:last-child) {
     border: none;
     border-radius: 50px;
 }
-nav > :last-child {
-    cursor: default;
+nav:not(.hidden) {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 main {
     width: inherit;
     height: inherit;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-
     background: #000;
 }
 
 h1 {
-    /* position: relative;
-        left: -300px; */
-    
     text-align: center;
     display: flex;
     gap: 10px;
@@ -82,12 +80,10 @@ h1 span:first-child {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    
     border: none;
     background: transparent;
     cursor: pointer;
 }
-
 .entry_point img {
     width: 100px;
     aspect-ratio: 1;
@@ -95,10 +91,6 @@ h1 span:first-child {
 .entry_point p {
     font-size: clamp(18px, 5vw, 25px);
     font-weight: 600;
-    /* opacity: 0; */
-    /* animation: fadeIn 900ms 1s 2s ease-in-out forwards; */
-    /* animation: fadeIn 1s 900ms 2s ease-in forwards; */
-
 }
 .entry_point > :first-child,
 .entry_point:hover > :nth-child(2) {
@@ -112,23 +104,24 @@ h1 span:first-child {
 /* using flex box to form grid layout */
 .application_container {
     position: relative;
-
     width: 100%;
     height: 100%;
     padding: 2rem;
-    
     display: flex;
     flex-direction: column;
     gap: 20px;
-
     overflow: hidden;
+}
+.application_container:not(.hidden) {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 .flex1,
 .flex2,
 .flex3 {
     width: 100%;
     display: flex;
-
     gap: 20px;
 }
 .flex1,
@@ -142,22 +135,18 @@ h1 span:first-child {
 .rooms {
     height: 100%;
     position: relative;
-    /* background-color: #ffd600; */
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    
     font-size: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center; 
-    text-transform: capitalize; 
+    text-align: center;
+    text-transform: capitalize;
     flex: 1;
-    /* cursor: pointer; */
-    overflow: hidden; /* remove if necessary*/
+    overflow: hidden;
 }
 .rooms > p {
     letter-spacing: 4px;
@@ -167,46 +156,20 @@ h1 span:first-child {
     object-fit: cover;
     position: absolute;
     z-index: -1;
-    /* opacity: .1; */
     filter: brightness(0.0);
-
 }
 .main_hall, .hall {
     flex-basis: 500px;
 }
-/* .main_hall::after {
-    background: url(./assets/imgs/hall.jpg) no-repeat;
-} */
-
 .bedroom {
     flex-basis: 200px;
 }
-/* .bedroom::after {
-    background: url(./assets/imgs/guest_room.jpg) no-repeat;
-} */
-
 .guest_room {
     flex-basis: 400px;
 }
-/* .guest_room::after {
-    background: url(./assets/imgs/guest_room.jpg) no-repeat;
-} */
 .kitchen, .bathroom, .outside_lights {
     flex-basis: 300px;
 }
-/* .kitchen::after {
-    background: url(./assets/imgs/kitchen.jpg) no-repeat;
-}
-.bathroom::after {
-    background: url(./assets/imgs/bathroom.jpg) no-repeat;
-}
-.outside_lights::after {
-    background: url(./assets/imgs/outside.jpg) no-repeat;
-}
-
-.corridor::after {
-    background: url(./assets/imgs/walkway.jpg) no-repeat;
-} */
 .rooms::after {
     content: '';
     position: absolute;
@@ -214,33 +177,16 @@ h1 span:first-child {
     width: 100%;
     height: 100%;
     z-index: -1;
-    filter: brightness(.2);
-    /* opacity: 0.7; */
-
     background-size: cover;
     background-position: center;
 }
-.rooms:hover .rooms::after { /*not working check it later */
+.rooms:hover::after {
     transform: scale(1.1);
     transition: all 800ms ease-in-out;
 }
-/* .rooms:active {
-    transform: scale(2);
-    opacity: 0.1;
-    width: 100%;
-    height: 100dvh;
-    position: absolute;
-    top: 0;
-    transition: all 800ms ease-in-out;
-} */
 .slider {
     width: 200px;
     height: fit-content;
-    /* height: 10px; */
-
-    /* border: none;
-    border-radius: 10px;
-    background: linear-gradient(45deg, black 50%, white 45%); */
 }
 .slider input {
     width: 100%;
@@ -272,10 +218,8 @@ h1 span:first-child {
     background-color: #111a;
     position: absolute;
     top: 0;
-
     width: 100%;
     height: 100%;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -283,15 +227,12 @@ h1 span:first-child {
 .advanced_features {
     width: min(500px, 100%);
     height: 80dvh;
-    background: var(--white-color);
     background: #ddd;
     color: #111;
     position: relative;
-
     border: none;
     border-radius: 5px;
     box-shadow: 1px 1px 5px #333;
-
     overflow-y: scroll;
     scrollbar-width: none;
 }
@@ -317,7 +258,6 @@ h3 {
 .component_summary div > p {
     letter-spacing: 3px;
     font-weight: 300;
-
 }
 .component_summary div:first-child > p:last-child {
     font-weight: 500;
@@ -331,20 +271,16 @@ h3 {
     position: absolute;
     top: 20px;
     right: 20px;
-    
     width: 20px;
     height: 20px;
-    
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 .customization {
     width: 100%;
     height: fit-content;
     padding: 2rem;
-
 }
 .edit {
     display: flex;
@@ -381,11 +317,11 @@ h4 {
 .defaultOff button:first-child,
 .defaultOn button:first-child {
     margin-right: 10px;
-    background: #0a0
+    background: #0a0;
 }
 .defaultOff button:last-child,
 .defaultOn button:last-child {
-    background: #a00
+    background: #a00;
 }
 .customization-details button {
     padding: 0.3rem;
@@ -408,7 +344,6 @@ h4 {
     background: #00a;
     overflow: hidden;
     cursor: pointer;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -417,48 +352,29 @@ h4 {
 }
 .wifi_notification {
     width: 100%;
-
     padding: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-
 }
 .wifi_connection_list_container {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
-    /* padding: 1rem; */
     gap: 10px;
 }
 .wifi_connections_list {
     padding: .4rem 1rem;
     font-weight: 500;
-
     display: flex;
     justify-content: space-between;
-    
 }
 .wifi_connections_list > img {
     width: 20px;
     aspect-ratio: 1;
-
 }
-
-/* .wifi-container:hover p {
-    display: block;
-} */
-.wifi_connection_list_container p:hover {
-    background: #018;
-    
-}
-
-
-
-
-
 
 /* GENERAL ELEMENT STYLES */
 img {
@@ -473,67 +389,83 @@ button {
     background: transparent;
 }
 
-
-
-/* DYNAMIC ELEMENT RENDERING */
+/* Notification styles */
 .notification {
     width: fit-content;
     max-width: 400px;
-    height: fit-content;
-    min-height: 40px;
+    min-height: 60px;
     margin: 1rem;
-    padding: 0.4rem 0.6rem;
-
+    padding: 0.8rem 1.2rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-
-    text-align: center;
     font-size: 1rem;
-    color: #aaa;
-    border: none;
-    border-radius: 5px;
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-
-    box-shadow: 2px 2px 5px 1px var(--white-color);
-    background-color: var(--white-color);
+    color: var(--notification-text);
+    border: 1px solid var(--notification-border);
+    border-radius: 10px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: var(--notification-bg);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in;
 }
-.notification :first-child {
-    width: 20px;
+.notification-content {
     display: flex;
     align-items: center;
+    gap: 12px;
+}
+.notification-icon img {
+    width: 24px;
+    height: 24px;
+}
+.close-notification {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+.close-notification:hover {
+    opacity: 1;
+}
+.close-notification img {
+    width: 100%;
+    height: 100%;
 }
 
-
-
-
-
-
+/* General light switch */
+.general_light_switch {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50px;
+    background: transparent;
+}
+.general_light_switch img {
+    width: 100%;
+    height: 100%;
+    transition: filter 0.3s ease;
+}
+.general_light_switch img[src$="light_bulb.svg"] {
+    filter: drop-shadow(0 0 5px var(--light-on));
+}
 
 /* ANIMATIONS */
 @keyframes left_slide-in {
-    0% {
-        /* position: relative;
-        left: -300px; */
-        opacity: 0.1;
-    }
-    50% {
-        opacity: .5;
-    }
-    100% {
-        left: 0;
-        opacity: 1;
-    }
+    0% { opacity: 0.1; }
+    50% { opacity: .5; }
+    100% { left: 0; opacity: 1; }
 }
 @keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(20px); }
 }
 
 /* loading effect */
@@ -542,30 +474,24 @@ button {
     justify-content: center;
     align-items: center;
     height: 100vh;
-
     background-color: #000;
-  }
-  
-  .loader {
+}
+.loader {
     margin: auto;
     width: 50px;
     height: 50px;
     background-color: #009;
     animation: spin 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-  }
-  
-  @keyframes spin {
-    0%, 100% {
-      transform: scale(1) rotate(0deg);
-    }
-    50% {
-      transform: scale(0.5) rotate(180deg);
-    }
-  }
+}
+@keyframes spin {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(0.5) rotate(180deg); }
+}
 
-/* SPECIAL CLASSES / PSEUDO CLASSES / DYNAMIC ELEMENT CLASSES*/
+/* SPECIAL CLASSES */
 .hidden {
-    display: none;
+    display: none !important;
+    visibility: hidden !important;
 }
 .wifi-active {
     background: #00a;

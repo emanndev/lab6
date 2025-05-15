@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Light App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>
+      <span>Welcome,</span>
+      <span>light up</span>
+    </h1>
+    <button class="entry_point">
+      <img src="./assets/svgs/light_bulb.svg" alt="Light bulb icon">
+      <img src="./assets/svgs/light_bulb_off.svg" alt="Light bulb off icon">
+      <p>Click to begin</p>
+    </button>
+  </main>
+
+  <nav class="hidden">
+    <button class="general_light_switch">
+      <img src="./assets/svgs/light_bulb_off.svg" alt="General light switch">
+    </button>
+  </nav>
+
+  <div class="application_container hidden">
+    <div class="flex1">
+      <div class="rooms hall">
+        <p>Hall</p>
+        <img src="./assets/images/hall.jpg" alt="Hall image">
+        <div class="basic_settings">
+          <div class="basic_settings_buttons">
+            <button class="light-switch">
+              <img src="./assets/svgs/light_bulb_off.svg" data-lighton="./assets/svgs/light_bulb.svg" alt="Light switch">
+            </button>
+            <button class="advance-settings_modal">
+              <img src="./assets/svgs/edit.svg" alt="Advanced settings">
+            </button>
+          </div>
+          <div class="slider">
+            <input type="range" min="0" max="10" value="5">
+          </div>
+        </div>
+      </div>
+      <div class="rooms bedroom">
+        <p>bedroom</p>
+        <img src="./assets/images/bedroom.jpg" alt="Bedroom image">
+        <div class="basic_settings">
+          <div class="basic_settings_buttons">
+            <button class="light-switch">
+              <img src="./assets/svgs/light_bulb_off.svg" data-lighton="./assets/svgs/light_bulb.svg" alt="Light switch">
+            </button>
+            <button class="advance-settings_modal">
+              <img src="./assets/svgs/edit.svg" alt="Advanced settings">
+            </button>
+          </div>
+          <div class="slider">
+            <input type="range" min="0" max="10" value="5">
+          </div>
+        </div>
+      </div>
+      <div class="rooms bathroom">
+        <p>bathroom</p>
+        <img src="./assets/images/bathroom.jpg" alt="Bathroom image">
+        <div class="basic_settings">
+          <div class="basic_settings_buttons">
+            <button class="light-switch">
+              <img src="./assets/svgs/light_bulb_off.svg" data-lighton="./assets/svgs/light_bulb.svg" alt="Light switch">
+            </button>
+            <button class="advance-settings_modal">
+              <img src="./assets/svgs/edit.svg" alt="Advanced settings">
+            </button>
+          </div>
+          <div class="slider">
+            <input type="range" min="0" max="10" value="5">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex2">
+      <div class="rooms outside_lights">
+        <p>Outdoor lights</p>
+        <img src="./assets/images/outside.jpg" alt="Outside lights image">
+        <div class="basic_settings">
+          <div class="basic_settings_buttons">
+            <button class="light-switch">
+              <img src="./assets/svgs/light_bulb_off.svg" data-lighton="./assets/svgs/light_bulb.svg" alt="Light switch">
+            </button>
+            <button class="advance-settings_modal">
+              <img src="./assets/svgs/edit.svg" alt="Advanced settings">
+            </button>
+          </div>
+          <div class="slider">
+            <input type="range" min="0" max="10" value="5">
+          </div>
+        </div>
+      </div>
+      <div class="rooms guest_room">
+        <p>guest room</p>
+        <img src="./assets/images/guest_room.jpg" alt="Guest room image">
+        <div class="basic_settings">
+          <div class="basic_settings_buttons">
+            <button class="light-switch">
+              <img src="./assets/svgs/light_bulb_off.svg" data-lighton="./assets/svgs/light_bulb.svg" alt="Light switch">
+            </button>
+            <button class="advance-settings_modal">
+              <img src="./assets/svgs/edit.svg" alt="Advanced settings">
+            </button>
+          </div>
+          <div class="slider">
+            <input type="range" min="0" max="10" value="5">
+          </div>
+        </div>
+      </div>
+      <div class="rooms kitchen">
+        <p>kitchen</p>
+        <img src="./assets/images/kitchen.jpg" alt="Kitchen image">
+        <div class="basic_settings">
+          <div class="basic_settings_buttons">
+            <button class="light-switch">
+              <img src="./assets/svgs/light_bulb_off.svg" data-lighton="./assets/svgs/light_bulb.svg" alt="Light switch">
+            </button>
+            <button class="advance-settings_modal">
+              <img src="./assets/svgs/edit.svg" alt="Advanced settings">
+            </button>
+          </div>
+          <div class="slider">
+            <input type="range" min="0" max="10" value="5">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex3">
+      <div class="rooms corridor">
+        <p>walkway & corridor</p>
+        <img src="./assets/images/walkway.jpg" alt="Walkway & Corridor image">
+        <div class="basic_settings">
+          <div class="basic_settings_buttons">
+            <button class="light-switch">
+              <img src="./assets/svgs/light_bulb_off.svg" data-lighton="./assets/svgs/light_bulb.svg" alt="Light switch">
+            </button>
+            <button class="advance-settings_modal">
+              <img src="./assets/svgs/edit.svg" alt="Advanced settings">
+            </button>
+          </div>
+          <div class="slider">
+            <input type="range" min="0" max="10" value="5">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="advanced_features_container hidden"></div>
+
+  <div class="wifi-container">
+    <div class="wifi_notification">
+      <p>Wifi is currently not available</p>
+      <p class="hidden">Wifi is available</p>
+      <div class="img_svg-container">
+        <img src="./assets/svgs/wifi.svg" alt="Wifi status">
+      </div>
+    </div>
+    <div class="wifi_connection_list_container hidden"></div>
+  </div>
+
+  <div class="loader-container hidden">
+    <div class="loader"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.0/dist/chart.min.js"></script>
+  <script type="module" src="main.ts"></script>
+</body>
+</html>
